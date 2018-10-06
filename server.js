@@ -1,22 +1,30 @@
-const express = require('express');
+let {io, connectedUsers} = require('./app');
+const clientsHelper = require('./helpers/clients');
 
-const app = express();
-const port = process.env.port || 2368;
-const router = express.Router();
+io.on('connection', socket => {
 
-app.use(express.static('../vue_channels/dist'));
+    socket.emit('connected', {});
+    
+    socket.on('connected', function (userData) {
+        connectedUsers[socket.id] = userData;
+    });
 
-app.engine('.html', require('ejs').render);
+    socket.on('joinToChannel', function (params) {
+        socket.join(params['channelId']);
 
-app.set('views', '../vue_channels/dist');
+        socket.broadcast.to(params['channelId']).emit('message', 'New user connected!');
+        io.to(params['channelId']).emit('message', `Hello ${params.name}!`);
 
-router.get('/*', (req, res, next) => {
-    res.sendFile('/var/www/vue_channels/dist/index.html');
+        clientsHelper.getClientsInChannel(params['channelId']).then((clients) => {
+            io.to(params['channelId']).emit('usersInside', clients);
+        });
+    });
+
+    socket.on('typing', function (params) {
+        io.to(params['channelId']).emit('typing', params.user);
+    });
+
+    socket.on('disconnect', () => {
+        connectedUsers[socket.id] = undefined;
+    });
 });
-
-
-app.use('/', router);
-
-app.listen(port);
-
-console.log('App running on port', port);
