@@ -1,5 +1,11 @@
 module.exports.messagesAction = (socket, io) => {
-  socket.on('typing', function (params) {
-    io.to(params['channelId']).emit('typing', params.user);
-  });
+
+    socket.on('typing', ({user, channelId}) => {
+        io.to(channelId).emit('typing', user);
+    });
+
+    socket.on('message', ({message, channelId}) => {
+        io.emit('message', message);
+    });
+
 };

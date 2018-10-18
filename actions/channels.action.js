@@ -1,14 +1,15 @@
 const { getClientsInChannel } = require('../helpers/clients');
 
 module.exports.channelsAction = (socket, io) => {
-  socket.on('joinToChannel', function (params) {
-    socket.join(params['channelId']);
 
-    socket.broadcast.to(params['channelId']).emit('message', 'New user connected!');
-    io.to(params['channelId']).emit('message', `Hello ${params.name}!`);
+  socket.on('joinToChannel', function ({user, channelId}) {
+    socket.join(channelId);
 
-    getClientsInChannel(params['channelId']).then((clients) => {
-      io.to(params['channelId']).emit('usersInside', clients);
+    socket.broadcast.to(channelId).emit('message', 'New user connected!');
+    io.to(channelId).emit('message', `Hello ${user}!`);
+
+    getClientsInChannel(channelId).then((clients) => {
+      io.to(channelId).emit('usersInside', clients);
     });
   });
 

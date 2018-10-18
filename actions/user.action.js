@@ -1,7 +1,9 @@
 let { connectedUsers } = require('../app');
 
 module.exports.userAction = (socket, io) => {
-    socket.on('connected', (userData) => {
+    socket.on('userInfo', (userData) => {
         connectedUsers[socket.id] = userData;
     });
+
+
 };
