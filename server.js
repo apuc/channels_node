@@ -9,10 +9,10 @@ io.use(isAuthorized);
 io.on('connection', socket => {
 
   userAction(socket, io);
-
   channelsAction(socket, io);
-
   messagesAction(socket, io);
+
+  console.log(connectedUsers);
 
   socket.on('disconnect', () => connectedUsers[socket.id] = undefined);
 
