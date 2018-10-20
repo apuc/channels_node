@@ -12,8 +12,6 @@ io.on('connection', socket => {
   channelsAction(socket, io);
   messagesAction(socket, io);
 
-  console.log(connectedUsers);
-
   socket.on('disconnect', () => connectedUsers[socket.id] = undefined);
 
 });
