@@ -5,6 +5,4 @@ module.exports.userAction = (socket, io) => {
         connectedUsers[socket.id] = userData;
         console.log(connectedUsers);
     });
-
-
 };
