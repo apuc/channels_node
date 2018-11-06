@@ -7,14 +7,14 @@ module.exports.messagesAction = (socket, io) => {
         io.to(channelId).emit('typing', user);
     });
 
-    socket.on('userMessage', ({message, channelId}) => {
-        const {username, id} = connectedUsers[socket.id];
-        request.post(`${process.env.API_URL}/message`, message)
+    socket.on('userMessage', messageData => {
+        const { channel_id } = messageData;
+        request.post(`${process.env.API_URL}/message`, messageData.text)
             .on('response', res => {
                 console.log('res', res.statusCode)
             })
             .on('error', err => console.log(err));
-        io.to(channelId).emit('userMessage', {username, id, message});
+        io.to(channel_id).emit('userMessage', messageData);
     });
 
 
