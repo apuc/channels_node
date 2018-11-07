@@ -1,7 +1,10 @@
-const { connectedUsers } = require('../app');
 const request = require('request');
-request.defaults({
-    headers: {'Content-Type': 'application/json'}
+const r = request.defaults({
+    headers: {
+      'Accept': '*/*',
+      'content-type': 'application/json',
+      'Cache-Control': 'no-cache'
+    }
 });
 
 module.exports.messagesAction = (socket, io) => {
@@ -12,23 +15,14 @@ module.exports.messagesAction = (socket, io) => {
 
     socket.on('userMessage', messageData => {
         const { channel_id, text, from } = messageData;
-        const message = {
-            channel_id: channel_id.toString(),
-            text,
-            from: from.toString()
-        };
+        const message = JSON.stringify({ channel_id, from, text });
         console.log(message);
-        request.post(`${process.env.API_URL}/message`, message, function (err, res, body) {
+        r.post(`${process.env.API_URL}/message`, message, function (err, res, body) {
             // console.log('err', err)
             // console.log('res', res)
             console.log('body', body)
-        })
-            // .on('response', res => {
-            //     console.log('res', res)
-            // })
-            // .on('error', err => console.log(err));
+        });
         io.to(channel_id).emit('userMessage', messageData);
     });
-
 
 };

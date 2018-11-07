@@ -6,7 +6,6 @@ const router = express.Router();
 const env = require('dotenv').config();
 
 const port = process.env.PORT || 2368;
-const connectedUsers = [];
 
 app.use(express.static('../vue_channels/dist'));
 
@@ -19,4 +18,3 @@ router.get('/*', (req, res, next) => {
 http.listen(port, () => { console.log(`listening on port ${port}`); });
 
 module.exports.io = io;
-module.exports.connectedUsers = connectedUsers;
