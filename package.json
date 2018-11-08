@@ -4,12 +4,13 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "PORT=2368 nodemon server"
+    "start": "concurrently \"PORT=2368\" \"nodemon server\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^4.0.1",
     "dotenv": "^6.1.0",
     "express": "^4.16.3",
     "request": "^2.88.0",
