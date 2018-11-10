@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"PORT=2368\" \"nodemon server\""
+    "serve": "concurrently \"PORT=2368\" \"nodemon server\"",
+    "dev": "concurrently \"PORT=2368\" \"node --inspect server\""
   },
   "keywords": [],
   "author": "",
