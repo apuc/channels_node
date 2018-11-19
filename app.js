@@ -4,9 +4,11 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const router = express.Router();
 const env = require('dotenv').config();
+const helmet = require('helmet');
 
 const port = process.env.PORT || 2368;
 
+app.use(helmet());
 app.use(express.static('../vue_channels/dist'));
 
 app.set('views', '../vue_channels/dist');
