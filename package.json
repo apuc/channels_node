@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "serve": "concurrently \"PORT=2368\" \"nodemon server\"",
-    "dev": "concurrently \"PORT=2368\" \"node --inspect server\""
+    "serve": "pm2 start server.js",
+    "inspect": "node --inspect server"
   },
   "keywords": [],
   "author": "",
