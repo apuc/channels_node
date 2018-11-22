@@ -12,8 +12,6 @@ module.exports.messagesAction = (socket, io) => {
     request.post({
       url: `${process.env.API_URL}/service/message`,
       headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
         'Service-Auth-Name': 'node',
         'Service-Auth-Access-Token': '$2y$10$2Y2ODrOm6qx.bdyVUU5WFO8h.jb3gktWVoWH8m1LUV8rc6tYoEm0i'
       },
@@ -21,7 +19,7 @@ module.exports.messagesAction = (socket, io) => {
     }, function (err, res, body) {
       // console.log('err', err)
       // console.log('res', res)
-      // console.log('body', body);
+      console.log('body', body);
       // io.to(channel_id).emit('messageStatus', 'ОК');
     });
 
