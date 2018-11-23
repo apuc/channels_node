@@ -2,18 +2,16 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const router = express.Router();
 const env = require('dotenv').config();
+const helmet = require('helmet');
+const path = require('path');
+const router = require('./router');
 
 const port = process.env.PORT || 2368;
 
-app.use(express.static('../vue_channels/dist'));
-
-app.set('views', '../vue_channels/dist');
-
-router.get('/*', (req, res, next) => {
-    res.sendFile('../vue_channels/dist/index.html');
-});
+app.use(helmet());
+app.use(express.static(path.join(__dirname, '../vue_channels/dist')));
+app.use('*', router);
 
 http.listen(port, () => { console.log(`listening on port ${port}`); });
 
