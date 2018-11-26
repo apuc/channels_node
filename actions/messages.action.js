@@ -18,12 +18,8 @@ module.exports.messagesAction = (socket, io) => {
       form: {channel_id, from, text, user_id}
     }, function (err, res, body) {
       // console.log('err', err)
-      // console.log('res', res)
-      console.log('body', body);
-      // io.to(channel_id).emit('messageStatus', 'ОК');
+      io.to(channel_id).emit('userMessage', JSON.parse(body).data);
     });
-
-    io.to(channel_id).emit('userMessage', messageData);
   });
 
 };
