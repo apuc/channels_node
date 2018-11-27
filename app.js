@@ -1,15 +1,15 @@
 const express = require('express');
 const app = express();
 const fs = require('fs');
-const privateKey  = fs.readFileSync('./privkey.pem', 'utf8');
-const certificate = fs.readFileSync('./fullchain.pem', 'utf8');
+const path = require('path');
+const privateKey  = fs.readFileSync('/etc/letsencrypt/live/mychannels.gq/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/mychannels.gq/fullchain.pem', 'utf8');
 const options = {key: privateKey, cert: certificate};
 const http = require('http').Server(app);
-const https = require('https').Server(options, app);
+const https = require('https').createServer(options, app);
 const io = require('socket.io')(https);
 const env = require('dotenv').config();
 const helmet = require('helmet');
-const path = require('path');
 const router = require('./router');
 
 const port = process.env.PORT || 2368;
