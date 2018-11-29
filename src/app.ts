@@ -1,24 +1,50 @@
-import { createServer, Server } from 'http';
-import * as express from 'express';
-import * as socketIo from 'socket.io';
+import {createServer, Server} from 'http';
+import express from 'express';
+import helmet from 'helmet';
+import path from 'path';
+import Socket from 'socket.io';
+import AppRouter from './router';
+import dotenv from 'dotenv';
 
-class App {
+export default class App {
 
-  private app: express.Application;
+    private readonly app: express.Application;
+    private readonly io: Socket.Server;
+    private readonly http: Server;
 
-  constructor() {
-    this.app = express();
-    this.config();
-  }
+    constructor(NODE_ENV: string = 'development', PORT: string = '2368') {
+        dotenv.config();
+        process.env.NODE_ENV = process.env.NODE_ENV || NODE_ENV;
+        process.env.PORT = process.env.PORT || PORT;
 
-  private config(): void{
+        this.app = express();
+        this.http = createServer(this.app);
+        this.io = Socket(this.http);
 
-  }
+        this.config();
+        this.listen();
+    }
 
-  public getApp() {
-    return this.app
-  }
+    private config(): void {
+        this.app.use(helmet());
+        this.app.use(express.static(path.join(__dirname, '../../vue_channels/dist')));
+        new AppRouter(this.app);
+    }
+
+    private listen() {
+        this.app.listen(process.env.PORT, () => {
+            console.log('The server is running in port: ', process.env.PORT);
+        });
+
+        this.io.on('connection', (socket: any) => {
+
+            console.log('Connected client on port %s.', process.env.PORT);
+
+            socket.on('disconnect', () => {
+                console.log('Client disconnected');
+            });
+
+        });
+    }
 
 }
-
-export default new App().getApp();
