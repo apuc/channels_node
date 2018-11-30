@@ -2,7 +2,7 @@ import {Router, Request, Response} from 'express';
 import path from 'path';
 import express from 'express'
 
-export default class AppRouter {
+export class AppRouter {
 
     private readonly router: Router;
     private readonly pathToView: string;

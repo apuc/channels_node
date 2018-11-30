@@ -1,11 +1,13 @@
-import {createServer, Server} from 'http';
 import express from 'express';
 import helmet from 'helmet';
-import SocketIO, {Socket} from 'socket.io';
-import AppRouter from './router';
 import dotenv from 'dotenv';
+import {createServer, Server} from 'http';
+import SocketIO from 'socket.io';
 
-export default class App {
+import { AppRouter } from './router';
+import { AppSocket } from './components/AppSocket';
+
+export class App {
 
   private readonly app: express.Application;
   private readonly io: SocketIO.Server;
@@ -21,7 +23,8 @@ export default class App {
     this.io = SocketIO(this.http);
 
     this.config();
-    this.listen();
+    this.httpListen();
+    this.socketListen();
   }
 
   private config(): void {
@@ -29,16 +32,14 @@ export default class App {
     new AppRouter(this.app);
   }
 
-  private listen() {
-    this.http.listen(process.env.PORT, () => console.log('The server is running in port: ', process.env.PORT));
-
-    this.io.on('connection', (socket: Socket) => {
-      console.log('Connected client on port %s.', process.env.PORT);
-      socket.on('disconnect', () => {
-        console.log('Client disconnected');
-      });
+  private httpListen(): void {
+    this.http.listen(process.env.PORT, () => {
+      console.log('The server is running in port: ', process.env.PORT)
     });
+  }
 
+  private socketListen(): void {
+    new AppSocket(this.io);
   }
 
 }
