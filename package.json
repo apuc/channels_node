@@ -6,16 +6,17 @@
   "scripts": {
     "serve": "pm2 start ./dist/server.js",
     "inspect": "node --inspect ./dist/server.js",
-    "build": "tsc",
     "start": "nodemon ./dist/server.js",
+    "build": "tsc",
     "watch:build": "tsc --watch",
-    "watch:server": "nodemon './dist/server.js' --watch './dist'",
-    "dev": "npm-run-all --sequential watch:build watch:server --print-label"
+    "watch:server": "nodemon ./dist/server.js --watch ./dist",
+    "dev": "concurrently \"npm run watch:build\" \"npm run watch:server\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^4.1.0",
     "dotenv": "^6.1.0",
     "express": "^4.16.3",
     "helmet": "^3.15.0",

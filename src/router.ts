@@ -7,15 +7,16 @@ export default class AppRouter {
     private readonly router: Router;
     private readonly pathToView: string;
 
-    constructor (app: express.Application, pathToView: string = '../../vue_channels/dist/index.html') {
+    constructor (app: express.Application, pathToView: string = '../../vue_channels/dist') {
         this.router = Router();
         this.pathToView = pathToView;
         this.setRoutes(app);
     }
 
     private setRoutes(app: express.Application): void {
+        app.use(express.static(path.join(__dirname, this.pathToView)));
         app.get('*', (req: Request, res: Response) => {
-            res.sendFile(path.join(__dirname, this.pathToView));
+            res.sendFile(path.join(__dirname, this.pathToView, '/index.html'));
         });
     }
 
