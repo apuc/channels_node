@@ -2,8 +2,8 @@ const request = require('request');
 
 module.exports.messagesAction = (socket, io) => {
 
-  socket.on('typing', ({username, channelId}) => {
-    io.to(channelId).emit('typing', username);
+  socket.on('typing', ({user, channelId, isTyping}) => {
+      socket.broadcast.to(channelId).emit('typing', {isTyping, user});
   });
 
   socket.on('userMessage', messageData => {
