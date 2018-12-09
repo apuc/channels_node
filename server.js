@@ -7,7 +7,6 @@ const { statusAction, setUserOffline } = require('./actions/status.action');
 io.use(isAuthorized);
 
 io.on('connection', socket => {
-  console.log(socket.handshake.query.user_id);
 
   channelsAction(socket, io);
   messagesAction(socket, io);

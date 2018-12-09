@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "serve": "pm2 start server.js",
-    "inspect": "node --inspect server",
-    "dev": "nodemon server"
+    "serve": "redis-cli flushall && pm2 start server.js",
+    "inspect": "redis-cli flushall && node --inspect server",
+    "dev": "redis-cli flushall && nodemon server"
   },
   "keywords": [],
   "author": "",
