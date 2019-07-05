@@ -45,7 +45,5 @@ export class MessagesGateway {
             .subscribe((res: UserMessageResponse) => {
                 this.server.to(`${channel_id}`).emit('userMessage', res);
             });
-
     }
-
 }
