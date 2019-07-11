@@ -30,6 +30,15 @@ export interface UserMessageResponse {
     text: string;
 }
 
+export interface UserTyping {
+    user: {
+        name: string,
+        id: number,
+    };
+    channelId: number;
+    isTyping: boolean;
+}
+
 @WebSocketGateway()
 export class MessagesGateway {
     @WebSocketServer()
@@ -45,5 +54,10 @@ export class MessagesGateway {
             .subscribe((res: UserMessageResponse) => {
                 this.server.to(`${channel_id}`).emit('userMessage', res);
             });
+    }
+
+    @SubscribeMessage('typing')
+    onUserTyping(socket: Socket, {channelId, ...other}: UserTyping) {
+        socket.broadcast.to(`${channelId}`).emit('typing', other);
     }
 }
