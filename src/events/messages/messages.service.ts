@@ -1,16 +1,9 @@
 import { HttpService, Injectable } from '@nestjs/common';
-import { ConfigService } from '../config/config.service';
-import { UserMessageRequest } from './messages/messages.gateway';
-
-export interface UserMessageForDataBase {
-    channel_id: string;
-    from: string;
-    text: string;
-    user_id: string;
-}
+import { ConfigService } from '../../config/config.service';
+import { UserMessageRequest } from './messages.interfaces';
 
 @Injectable()
-export class EventsService {
+export class MessagesService {
 
     private readonly url: string;
 
@@ -19,6 +12,7 @@ export class EventsService {
     }
 
     saveMessageToDB(message: UserMessageRequest) {
+        console.log(message);
         return this.http.post(`${this.url}/service/message`, message, {
             headers: {
                 'Service-Auth-Name': 'node',
