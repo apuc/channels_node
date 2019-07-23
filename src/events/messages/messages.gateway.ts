@@ -4,47 +4,16 @@ import {
     WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { EventsService } from '../events.service';
 import {map} from 'rxjs/operators';
-
-export interface User {
-    username: string;
-    avatar: string | null;
-    id: number;
-}
-export interface UserMessageRequest {
-    user: User;
-    channel_id: number;
-    from: number;
-    user_id: number;
-    text: string;
-}
-export interface UserMessageResponse {
-    id: number;
-    channel: number;
-    to: number | null;
-    from: User;
-    attachments: string[];
-    read: number;
-    created_at: string;
-    text: string;
-}
-
-export interface UserTyping {
-    user: {
-        name: string,
-        id: number,
-    };
-    channelId: number;
-    isTyping: boolean;
-}
+import { UserMessageRequest, UserMessageResponse, UserTyping } from './messages.interfaces';
+import { MessagesService } from './messages.service';
 
 @WebSocketGateway()
 export class MessagesGateway {
     @WebSocketServer()
     private server: Server;
 
-    constructor(private eventService: EventsService) {}
+    constructor(private eventService: MessagesService) {}
 
     @SubscribeMessage('userMessage')
     onUserMessage(socket: Socket, messageData: UserMessageRequest) {
