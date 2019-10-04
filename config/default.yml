@@ -1,0 +1,6 @@
+api:
+    url: "https://api.mychannels.gq/v1"
+
+server:
+  port: 3000
+  views_dir: "../../vue/dist/"
