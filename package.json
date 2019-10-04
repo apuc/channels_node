@@ -29,7 +29,7 @@
     "@types/dotenv": "^6.1.1",
     "dotenv": "^8.0.0",
     "ejs": "^2.6.2",
-    "pm2-slack": "^1.1.0",
+    "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rxjs": "^6.3.3"

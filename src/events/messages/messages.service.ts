@@ -12,7 +12,6 @@ export class MessagesService {
     }
 
     saveMessageToDB(message: UserMessageRequest) {
-        console.log(message);
         return this.http.post(`${this.url}/service/message`, message, {
             headers: {
                 'Service-Auth-Name': 'node',

@@ -6,7 +6,16 @@ import { MessagesService } from './messages/messages.service';
 import { ConfigService } from '../config/config.service';
 
 @Module({
-  imports: [HttpModule],
-  providers: [EventsGateway, ChannelsGateway, MessagesGateway, MessagesService, ConfigService],
+    imports: [
+        HttpModule,
+    ],
+    providers: [
+        EventsGateway,
+        ChannelsGateway,
+        MessagesGateway,
+        MessagesService,
+        ConfigService,
+    ],
 })
-export class EventsModule {}
+export class EventsModule {
+}
