@@ -3,12 +3,14 @@ import {
     WebSocketGateway,
     WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
+import { ServerWithUsers } from '../events.gateway';
 
-@WebSocketGateway()
+@WebSocketGateway({namespace: '/'})
 export class ChannelsGateway {
+
     @WebSocketServer()
-    private server: Server;
+    server: ServerWithUsers;
 
     @SubscribeMessage('joinChannels')
     onJoinChannels(socket: Socket, channelsIds: number[]): void {
@@ -20,7 +22,6 @@ export class ChannelsGateway {
 
     @SubscribeMessage('joinChannel')
     onJoinChannel(socket: Socket, channelId: number): void {
-        console.log('channelId', channelId);
         socket.join(`${channelId}`);
         socket.emit('systemMessage', {message: `You joined to ${channelId}`});
         socket.broadcast.to(`${channelId}`).emit('systemMessage', {message: `Someone joined!`});
@@ -28,7 +29,6 @@ export class ChannelsGateway {
 
     @SubscribeMessage('leaveChannel')
     onLeaveChannel(socket: Socket, channelId: number): void {
-        console.log(channelId);
         socket.leave(`${channelId}`, () => {
             socket.emit('systemMessage', {message: `You leave channel ${channelId}!`});
             socket.broadcast.to(`${channelId}`).emit('systemMessage', {message: `Someone leave channel!`});

@@ -1,17 +1,44 @@
 import {
     OnGatewayInit,
+    SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+import { Logger } from '@nestjs/common';
 
-@WebSocketGateway()
+export interface ServerWithUsers extends Server {
+    connectedUsers?: {
+        [key: string ]: string[],
+    };
+}
+
+@WebSocketGateway({namespace: '/'})
 export class EventsGateway implements OnGatewayInit {
     @WebSocketServer()
-    private server: Server;
+    server: ServerWithUsers;
+    private logger = new Logger('EventsGateway');
 
     afterInit(server: Server): void {
-        console.log('init');
+        this.logger.log('Socket server init successfully');
+        this.server.connectedUsers = {};
+    }
+
+    @SubscribeMessage('connection')
+    handleConnection({handshake, id}: Socket) {
+        if (!this.server.connectedUsers[handshake.query.user_id]) {
+            this.server.connectedUsers[handshake.query.user_id] = [id];
+        } else {
+            this.server.connectedUsers[handshake.query.user_id].push(id);
+        }
+        this.logger.log(`User connected! User id is ${handshake.query.user_id}`);
+    }
+
+    @SubscribeMessage('disconnect')
+    handleDisconnect({handshake, id}: Socket) {
+        const currentUser = this.server.connectedUsers[handshake.query.user_id];
+        this.server.connectedUsers[handshake.query.user_id] = currentUser.filter((userId => userId !== id));
+        this.logger.log(`User disconnected! User id is ${handshake.query.user_id}`);
     }
 
 }

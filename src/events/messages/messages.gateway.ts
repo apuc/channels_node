@@ -1,17 +1,19 @@
 import {
     SubscribeMessage,
-    WebSocketGateway,
-    WebSocketServer,
+    WebSocketGateway, WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
 import {map} from 'rxjs/operators';
 import { UserMessageRequest, UserMessageResponse, UserTyping } from './messages.interfaces';
 import { MessagesService } from './messages.service';
+import { ServerWithUsers } from '../events.gateway';
+import { Logger } from '@nestjs/common';
 
-@WebSocketGateway()
+@WebSocketGateway({namespace: '/'})
 export class MessagesGateway {
     @WebSocketServer()
-    private server: Server;
+    server: ServerWithUsers;
+    private logger = new Logger('MessagesGateway');
 
     constructor(private eventService: MessagesService) {}
 
@@ -28,5 +30,10 @@ export class MessagesGateway {
     @SubscribeMessage('typing')
     onUserTyping(socket: Socket, {channelId, ...other}: UserTyping) {
         socket.broadcast.to(`${channelId}`).emit('typing', other);
+    }
+
+    @SubscribeMessage('messageNotification')
+    onMessageNotification(socket: Socket, channelId: number) {
+        socket.broadcast.to(`${channelId}`).emit('messageNotification', channelId);
     }
 }
