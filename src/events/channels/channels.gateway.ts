@@ -3,14 +3,14 @@ import {
     WebSocketGateway,
     WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import { ServerWithUsers } from '../events.gateway';
+import {Server, Socket} from 'socket.io';
+import {UserMessageResponse} from "../messages/messages.interfaces";
 
 @WebSocketGateway({namespace: '/'})
 export class ChannelsGateway {
 
     @WebSocketServer()
-    server: ServerWithUsers;
+    server: Server;
 
     @SubscribeMessage('joinChannels')
     onJoinChannels(socket: Socket, channelsIds: number[]): void {
@@ -33,6 +33,15 @@ export class ChannelsGateway {
             socket.emit('systemMessage', {message: `You leave channel ${channelId}!`});
             socket.broadcast.to(`${channelId}`).emit('systemMessage', {message: `Someone leave channel!`});
         });
+    }
+
+    /**
+     * Отправляет интеграцию в каналы
+     */
+    sendIntegration(channel_ids:number [],message:UserMessageResponse){
+        for (let id of channel_ids){
+            this.server.to(`${id}`).emit('userMessage', message);
+        }
     }
 
 }

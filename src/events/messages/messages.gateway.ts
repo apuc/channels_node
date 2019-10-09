@@ -2,17 +2,16 @@ import {
     SubscribeMessage,
     WebSocketGateway, WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import {Server, Socket} from 'socket.io';
 import {map} from 'rxjs/operators';
 import { UserMessageRequest, UserMessageResponse, UserTyping } from './messages.interfaces';
 import { MessagesService } from './messages.service';
-import { ServerWithUsers } from '../events.gateway';
 import { Logger } from '@nestjs/common';
 
 @WebSocketGateway({namespace: '/'})
 export class MessagesGateway {
     @WebSocketServer()
-    server: ServerWithUsers;
+    server: Server;
     private logger = new Logger('MessagesGateway');
 
     constructor(private eventService: MessagesService) {}

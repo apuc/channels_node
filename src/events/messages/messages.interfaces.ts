@@ -3,6 +3,7 @@ export interface UserMessageUser {
     avatar: string | null;
     id: number;
 }
+
 export interface UserMessageAttachmentRequest {
     type: string;
     options: {
@@ -10,6 +11,7 @@ export interface UserMessageAttachmentRequest {
         url: string,
     };
 }
+
 export interface UserMessageAttachmentResponse {
     id: number;
     status: 'active' | '';
@@ -20,6 +22,7 @@ export interface UserMessageAttachmentResponse {
         url: string,
     };
 }
+
 export interface UserMessageRequest {
     channel_id: string;
     from: string;
@@ -27,6 +30,7 @@ export interface UserMessageRequest {
     user_id: string;
     attachments: [UserMessageAttachmentRequest] | [];
 }
+
 export interface UserMessageResponse {
     id: number;
     channel: number;
@@ -45,4 +49,9 @@ export interface UserTyping {
     };
     channelId: number;
     isTyping: boolean;
+}
+
+export interface IntegrationMessage {
+    channels_ids: number[],
+    message:UserMessageResponse
 }

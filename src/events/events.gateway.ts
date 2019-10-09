@@ -5,39 +5,30 @@ import {
     WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger } from '@nestjs/common';
-
-export interface ServerWithUsers extends Server {
-    connectedUsers?: {
-        [key: string ]: string[],
-    };
-}
+import {Logger} from '@nestjs/common';
+import {AppService} from "../app.service";
 
 @WebSocketGateway({namespace: '/'})
 export class EventsGateway implements OnGatewayInit {
     @WebSocketServer()
-    server: ServerWithUsers;
+    server: Server;
     private logger = new Logger('EventsGateway');
+
+    constructor(private appService: AppService){}
 
     afterInit(server: Server): void {
         this.logger.log('Socket server init successfully');
-        this.server.connectedUsers = {};
     }
 
     @SubscribeMessage('connection')
     handleConnection({handshake, id}: Socket) {
-        if (!this.server.connectedUsers[handshake.query.user_id]) {
-            this.server.connectedUsers[handshake.query.user_id] = [id];
-        } else {
-            this.server.connectedUsers[handshake.query.user_id].push(id);
-        }
+        this.appService.addClient(handshake.query.user_id,id);
         this.logger.log(`User connected! User id is ${handshake.query.user_id}`);
     }
 
     @SubscribeMessage('disconnect')
     handleDisconnect({handshake, id}: Socket) {
-        const currentUser = this.server.connectedUsers[handshake.query.user_id];
-        this.server.connectedUsers[handshake.query.user_id] = currentUser.filter((userId => userId !== id));
+        this.appService.removeClient(handshake.query.user_id,id)
         this.logger.log(`User disconnected! User id is ${handshake.query.user_id}`);
     }
 
