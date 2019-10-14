@@ -27,8 +27,8 @@ export class MessagesGateway {
     }
 
     @SubscribeMessage('typing')
-    onUserTyping(socket: Socket, {channelId, ...other}: UserTyping) {
-        socket.broadcast.to(`${channelId}`).emit('typing', other);
+    onUserTyping(socket: Socket, data: UserTyping) {
+       socket.broadcast.to(`${data.channelId}`).emit('typing', data);
     }
 
     @SubscribeMessage('messageNotification')
