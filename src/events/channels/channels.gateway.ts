@@ -40,7 +40,9 @@ export class ChannelsGateway {
      */
     sendIntegration(channel_ids:number [],message:UserMessageResponse){
         for (let id of channel_ids){
+            message.channel = id;
             this.server.to(`${id}`).emit('userMessage', message);
+            this.server.to(`${id}`).emit('messageNotification', {channel_id:id,from:message.from.id});
         }
     }
 
