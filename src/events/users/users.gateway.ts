@@ -13,8 +13,7 @@ export class UsersGateway {
 
     private logger = new Logger('UsersGateway');
 
-    constructor(private appService: AppService) {
-    }
+    constructor(private appService: AppService) {}
 
     @SubscribeMessage('friendRequest')
     onFriendRequest(socket: Socket, request: friendRequest) {

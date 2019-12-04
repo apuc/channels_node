@@ -5,12 +5,15 @@ import {
 } from '@nestjs/websockets';
 import {Server, Socket} from 'socket.io';
 import {UserMessageResponse} from "../messages/messages.interfaces";
+import {AppService} from "../../app.service";
 
 @WebSocketGateway({namespace: '/'})
 export class ChannelsGateway {
 
     @WebSocketServer()
     server: Server;
+
+    constructor(private appService: AppService) {}
 
     @SubscribeMessage('joinChannels')
     onJoinChannels(socket: Socket, channelsIds: number[]): void {
@@ -33,6 +36,20 @@ export class ChannelsGateway {
             socket.emit('systemMessage', {message: `You leave channel ${channelId}!`});
             socket.broadcast.to(`${channelId}`).emit('systemMessage', {message: `Someone leave channel!`});
         });
+    }
+
+    @SubscribeMessage('addToChannel')
+    onAddToChannel(socket: Socket, data: any): void {
+
+        let client = this.appService.getClient(data.user_id)
+
+        if(!client){
+            return;
+        }
+
+        for (let socketId of client.socketIds){
+            this.server.to(`${socketId}`).emit('addToChannel', data.channel);
+        }
     }
 
     /**
