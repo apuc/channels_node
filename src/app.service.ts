@@ -26,4 +26,8 @@ export class AppService {
         const userSockets = this.users[userId].socketIds;
         this.users[userId].socketIds = userSockets.filter((socId => socId !== socketId));
     }
+
+    getClient(userId: number){
+        return this.users[userId];
+    }
 }
