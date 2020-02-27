@@ -34,5 +34,7 @@ export class MessagesGateway {
     @SubscribeMessage('messageNotification')
     onMessageNotification(socket: Socket, {channel_id,from}) {
         socket.broadcast.to(`${channel_id}`).emit('messageNotification', {channel_id,from});
+
+        this.eventService.sendPushNotifications(channel_id,from);
     }
 }
