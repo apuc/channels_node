@@ -50,7 +50,7 @@ export class MessagesService {
                        ).then(res=>{
                            console.log('send norm')
                        }).catch(err=>{
-                           console.log("Error",err)
+                           console.log("Error",err.body)
                        })
                    }
                }
