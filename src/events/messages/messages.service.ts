@@ -47,7 +47,11 @@ export class MessagesService {
                        webpush.sendNotification(
                            endpoint,
                            JSON.stringify({text:'Новое сообщение!'})
-                       )
+                       ).then(res=>{
+                           console.log('send norm')
+                       }).catch(err=>{
+                           console.log("Error",err)
+                       })
                    }
                }
 
