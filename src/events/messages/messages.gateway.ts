@@ -32,9 +32,9 @@ export class MessagesGateway {
     }
 
     @SubscribeMessage('messageNotification')
-    onMessageNotification(socket: Socket, {channel_id,from}) {
+    onMessageNotification(socket: Socket, {channel_id,from,notification_data}) {
         socket.broadcast.to(`${channel_id}`).emit('messageNotification', {channel_id,from});
 
-        this.eventService.sendPushNotifications(channel_id,from);
+        this.eventService.sendPushNotifications(channel_id,from,notification_data);
     }
 }

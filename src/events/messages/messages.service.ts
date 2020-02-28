@@ -2,7 +2,7 @@ import { HttpService, Injectable } from '@nestjs/common';
 import {UserMessageRequest, UserMessageResponse} from './messages.interfaces';
 import * as config from 'config';
 import {map} from "rxjs/operators";
-import {UserPush} from "../users/users.interfaces";
+import {PushData, UserPush} from "../users/users.interfaces";
 const webpush = require('web-push');
 
 @Injectable()
@@ -23,7 +23,7 @@ export class MessagesService {
         });
     }
 
-    sendPushNotifications(channel:Number,from:Number){
+    sendPushNotifications(channel:Number,from:Number,data:PushData){
         this.http.post(`${this.apiConfig.url}/service/channel/${channel}/users-push`, {user_id:from}, {
             headers: {
                 'Service-Auth-Name': 'node',
@@ -46,7 +46,7 @@ export class MessagesService {
                    for(let endpoint of user.endpoints){
                        webpush.sendNotification(
                            endpoint,
-                           JSON.stringify({text:'Новое сообщение!'})
+                           JSON.stringify(data)
                        ).then(res=>{
                            console.log('send norm')
                        }).catch(err=>{

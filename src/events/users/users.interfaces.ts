@@ -23,3 +23,8 @@ export interface Endpoint {
         p256dh:String,
     }
 }
+
+export interface PushData {
+    title:String;
+    body:String
+}
