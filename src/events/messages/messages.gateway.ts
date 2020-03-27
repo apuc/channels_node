@@ -24,6 +24,10 @@ export class MessagesGateway {
             .subscribe((res: UserMessageResponse) => {
                 this.server.to(`${channel_id}`).emit('userMessage', res);
             });
+
+        this.server.in(`${channel_id}`).clients((err , clients) => {
+           console.log(`Channel: ${channel_id}`,clients);
+        });
     }
 
     @SubscribeMessage('typing')
