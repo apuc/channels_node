@@ -20,21 +20,11 @@ export class MessagesGateway {
     onUserMessage(socket: Socket, messageData: UserMessageRequest) {
         const {channel_id} = messageData;
 
-        this.server.in(`${channel_id}`).clients((err , clients) => {
-            if(clients.indexOf(socket.id) === -1){
-                socket.join(`${channel_id}`)
-            }
-        });
-
         this.eventService.saveMessageToDB(messageData)
             .pipe(map((res) => res.data.data))
             .subscribe((res: UserMessageResponse) => {
                 this.server.to(`${channel_id}`).emit('userMessage', res);
             });
-
-        this.server.in(`${channel_id}`).clients((err , clients) => {
-            console.log(clients);
-        });
     }
 
     @SubscribeMessage('typing')
@@ -46,6 +36,6 @@ export class MessagesGateway {
     onMessageNotification(socket: Socket, {channel_id,from,notification_data}) {
         socket.broadcast.to(`${channel_id}`).emit('messageNotification', {channel_id,from});
 
-        //this.eventService.sendPushNotifications(channel_id,from,notification_data);
+        this.eventService.sendPushNotifications(channel_id,from,notification_data);
     }
 }
